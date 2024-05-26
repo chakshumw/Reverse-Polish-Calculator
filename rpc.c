@@ -22,6 +22,20 @@ typedef enum {
 int add(int a, int b) { return a + b; }
 int mul(int a, int b) { return a * b; }
 int div(int a, int b) { return a / b; }
+
+// Function to get the appropriate operation function based on the character
+opfunc getop(char c) {
+    switch (c) {
+        case '+':
+            return add;
+        case '*':
+            return mul;
+        case '/':
+            return div;
+        default:
+            return NULL;
+    }
+}
 int main() {
     //code
 }
