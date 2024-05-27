@@ -37,6 +37,7 @@ opfunc getop(char c) {
     }
 }
 int main() {
+    
     State state = START; // Initialize state to START
     int c, number, stack[MAXLEN], sign = 1, stackpos = 0;
     char message[MAXLEN];
