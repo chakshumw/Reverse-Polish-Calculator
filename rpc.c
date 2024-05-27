@@ -38,4 +38,59 @@ opfunc getop(char c) {
 }
 int main() {
     
+    State state = START; // Initialize state to START
+    int c, number, stack[MAXLEN], sign = 1, stackpos = 0;
+    char message[MAXLEN];
+    opfunc op = NULL; // Operation function pointer
+
+    // Main input processing loop
+    printf("Enter an Expression : ");
+
+    while (state != ERROR && ((c = getchar()) != EOF)) {
+        if (state == START) {
+            if (isdigit(c)) {
+                number = c - '0';
+                state = NUMBER;
+            } else if (c == '\n') {
+                continue; // Ignore newlines in START state
+            } else if (isspace(c)) {
+                state = SPACE;
+            } else if (c == '-') {
+                state = MINUS;
+            } //Code #1 Error Handling =============================================
+
+        } else if (state == NUMBER) {
+            if (isdigit(c)) {
+                number = (number * 10) + (c - '0');
+            } else if (c == '\n') {
+                stack[stackpos++] = sign * number;
+                sign = 1;
+                state = NEWLINE;
+            } else if (isspace(c)) {
+                stack[stackpos++] = sign * number;
+                sign = 1;
+                state = SPACE;
+            } //Code #2 Error Handling =============================================
+
+        } else if (state == MINUS) {
+            if (isdigit(c)) {
+                number = c - '0';
+                sign = -1;
+                state = NUMBER;
+                continue;
+            }
+            if (stackpos < 2) {
+                
+                //Code #3 Error Handling =============================================
+            } else if (isspace(c)) {
+                int right = stack[--stackpos];
+                int left = stack[--stackpos];
+                stack[stackpos++] = left - right;
+                state = c == '\n' ? NEWLINE : SPACE;
+            } else {
+
+                //Code #4 Error Handling =============================================
+            }
+        }
+    }
 }
