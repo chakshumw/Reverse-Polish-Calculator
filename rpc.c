@@ -92,5 +92,50 @@ int main() {
                 //Code #4 Error Handling =============================================
             }
         }
+        } else if (state == SPACE) {
+                    if (isdigit(c)) {
+                        number = c - '0';
+                        state = NUMBER;
+                    } else if (c == '\n') {
+                        state = NEWLINE;
+                    } else if (c == '-') {
+                        state = MINUS;
+                    } else if (!isspace(c)) {
+                        op = getop(c);
+                        if (op == NULL) {
+                            //Code #5 Error Handling =============================================
+                        } //Code #6 Error Handling =============================================     
+                    }
+                    
+                } else if (state == OPERATOR) {
+                    if (c == '\n') {
+                        state = NEWLINE;
+                    } else if (isspace(c)) {
+                        state = SPACE;
+                    } //Code #7 Error Handling =============================================
+                }
+
+                if (state == NEWLINE) {
+                    if (stackpos > 1) {
+                        //Code #8 Error Handling =============================================
+                    } else {
+                        if (stackpos == 1) {
+                            printf("result: %d\n", stack[0]);
+                            stackpos = 0;
+                        }
+                        state = START;
+                    }
+                }
+            }
+
+            if (state == ERROR) {
+                printf("%s\n", message);
+            } else if (stackpos > 1) {
+                printf("Too many operands\n");
+            } else if (stackpos == 1) {
+                printf("result: %d\n", stack[0]);
+            }
+            return 0;
+        }
     }
 }
