@@ -56,7 +56,11 @@ int main() {
                 state = SPACE;
             } else if (c == '-') {
                 state = MINUS;
-            } //Code #1 Error Handling =============================================
+            }
+            else{
+                state = ERROR;
+                strcpy(message, "INvalid character at the start of line");
+            }
 
         } else if (state == NUMBER) {
             if (isdigit(c)) {
@@ -69,7 +73,11 @@ int main() {
                 stack[stackpos++] = sign * number;
                 sign = 1;
                 state = SPACE;
-            } //Code #2 Error Handling =============================================
+            }
+            else{
+                state = ERROR;
+                strcpy(message,"Invalid character at the end of number");
+            }
 
         } else if (state == MINUS) {
             if (isdigit(c)) {
@@ -79,14 +87,16 @@ int main() {
                 continue;
             }
             if (stackpos < 2) {
-                //Code #3 Error Handling =============================================
+                state = ERROR;
+                strcpy(message,"More operands required");
             } else if (isspace(c)) {
                 int right = stack[--stackpos];
                 int left = stack[--stackpos];
                 stack[stackpos++] = left - right;
                 state = c == '\n' ? NEWLINE : SPACE;
             } else {
-                //Code #4 Error Handling =============================================
+                state = ERROR;
+                strcpy(message,"Invalid character after '-'");
             }
         } else if (state == SPACE) {
             if (isdigit(c)) {
