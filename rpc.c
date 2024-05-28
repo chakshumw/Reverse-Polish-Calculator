@@ -92,7 +92,7 @@ int main() {
                 //Code #4 Error Handling =============================================
             }
         }
-        } else if (state == SPACE) {
+        else if (state == SPACE) {
                     if (isdigit(c)) {
                         number = c - '0';
                         state = NUMBER;
@@ -137,5 +137,3 @@ int main() {
             }
             return 0;
         }
-    }
-}
