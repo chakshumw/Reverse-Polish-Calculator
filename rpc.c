@@ -38,7 +38,7 @@ opfunc getop(char c) {
 }
 
 int main() {
-     State state = START; // Initialize state to START
+    State state = START; // Initialize state to START
     int c, number, stack[MAXLEN], sign = 1, stackpos = 0;
     char message[MAXLEN];
     opfunc op = NULL; // Operation function pointer
@@ -56,12 +56,10 @@ int main() {
                 state = SPACE;
             } else if (c == '-') {
                 state = MINUS;
-            }
-            else{
+            } else {
                 state = ERROR;
-                strcpy(message, "INvalid character at the start of line");
+                strcpy(message, "Invalid character at start of line");
             }
-
         } else if (state == NUMBER) {
             if (isdigit(c)) {
                 number = (number * 10) + (c - '0');
@@ -73,12 +71,10 @@ int main() {
                 stack[stackpos++] = sign * number;
                 sign = 1;
                 state = SPACE;
-            }
-            else{
+            } else {
                 state = ERROR;
-                strcpy(message,"Invalid character at the end of number");
+                strcpy(message, "Invalid character at the end of number");
             }
-
         } else if (state == MINUS) {
             if (isdigit(c)) {
                 number = c - '0';
@@ -88,7 +84,7 @@ int main() {
             }
             if (stackpos < 2) {
                 state = ERROR;
-                strcpy(message,"More operands required");
+                strcpy(message, "More operands required");
             } else if (isspace(c)) {
                 int right = stack[--stackpos];
                 int left = stack[--stackpos];
@@ -96,7 +92,7 @@ int main() {
                 state = c == '\n' ? NEWLINE : SPACE;
             } else {
                 state = ERROR;
-                strcpy(message,"Invalid character after '-'");
+                strcpy(message, "Invalid character after '-'");
             }
         } else if (state == SPACE) {
             if (isdigit(c)) {
@@ -109,8 +105,24 @@ int main() {
             } else if (!isspace(c)) {
                 op = getop(c);
                 if (op == NULL) {
-                    //Code #5 Error Handling =============================================
-                } //Code #6 Error Handling =============================================     
+                    state = ERROR;
+                    strcpy(message, "Expected one of +/*");
+                } else {
+                    if (stackpos < 2) {
+                        state = ERROR;
+                        strcpy(message, "More operands required");
+                        continue;
+                    }
+                    int right = stack[--stackpos];
+                    int left = stack[--stackpos];
+                    if (right == 0 && c == '/') {
+                        state = ERROR;
+                        strcpy(message, "Division by zero");
+                    } else {
+                        stack[stackpos++] = op(left, right);
+                        state = OPERATOR;
+                    }
+                }
             }
             
         } else if (state == OPERATOR) {
@@ -118,15 +130,19 @@ int main() {
                 state = NEWLINE;
             } else if (isspace(c)) {
                 state = SPACE;
-            } //Code #7 Error Handling =============================================
+            } else {
+                strcpy(message, "Expected space or newline after operator");
+                state = ERROR;
+            }
         }
 
         if (state == NEWLINE) {
             if (stackpos > 1) {
-                //Code #8 Error Handling =============================================
+                state = ERROR;
+                strcpy(message, "Too many operands");
             } else {
                 if (stackpos == 1) {
-                    printf("result: %d\n", stack[0]);
+                    printf("Result: %d\n", stack[0]);
                     stackpos = 0;
                 }
                 state = START;
@@ -139,7 +155,7 @@ int main() {
     } else if (stackpos > 1) {
         printf("Too many operands\n");
     } else if (stackpos == 1) {
-        printf("result: %d\n", stack[0]);
+        printf("Result: %d\n", stack[0]);
     }
     return 0;
 }
